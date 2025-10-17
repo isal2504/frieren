@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Frieren HD</title>
+
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; scroll-behavior:smooth; }
+  body { color:white; background:#000; overflow-x:hidden; }
+
+  /* ===== NAVBAR ===== */
+  nav { display:flex; justify-content:center; gap:40px; background:rgba(214,214,214,0.6); padding:15px 40px; border-radius:12px; backdrop-filter:blur(8px); width:fit-content; margin:30px auto; position:relative; z-index:10; opacity:0; transform:translateY(-30px) scale(0.95); transition:all 1s ease; }
+  nav.show { opacity:1; transform:translateY(0) scale(1);}
+  nav a { color:#fff; text-decoration:none; font-weight:bold; font-size:18px; position:relative; opacity:0; transform:translateY(-20px); animation:navFade 0.5s forwards; transition:all 0.3s ease;}
+  nav.show a:nth-child(1){animation-delay:0.3s;}
+  nav.show a:nth-child(2){animation-delay:0.6s;}
+  nav.show a:nth-child(3){animation-delay:0.9s;}
+  @keyframes navFade{ to{opacity:1; transform:translateY(0);} }
+  nav a::after{ content:""; position:absolute; bottom:-5px; left:50%; width:0%; height:3px; background:linear-gradient(90deg,#fff,#0055ff,#fff); transform:translateX(-50%); border-radius:2px; transition:all 0.4s ease;}
+  nav a:hover{color:#ffd700; transform:scale(1.15); text-shadow:0 0 10px #ffd700,0 0 20px rgba(255,215,0,0.6);}
+  nav a:hover::after{width:80%;}
+
+  /* ===== HOME ===== */
+  #home { text-align:center; height:100vh; overflow:hidden; position:relative; background:url("11010010.jpg") no-repeat center/cover; z-index:2;}
+  #home::after{ content:""; position:absolute; bottom:0; left:0; width:100%; height:300px; background:linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.8)); z-index:3; filter:blur(30px);}
+  .background-text { position:absolute; top:40%; left:50%; transform:translate(-50%,-200px); font-size:250px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:10px; pointer-events:none; z-index:0; opacity:0; transition:all 1.6s ease; text-shadow:0 0 25px rgba(255,255,255,0.7),0 0 50px rgba(0,0,0,0.8),0 0 100px rgba(0,51,255,0.6);}
+  .hero-img {
+  width: 180%;
+  max-width: 900px;
+  border-radius: 20px;
+  filter: brightness(0) drop-shadow(0 0 40px rgba(255,255,255,0.5));
+  z-index: 1;
+  position: absolute;
+  top: 63%;
+  left: 57%;
+  transform: translate(-50%, 50px); /* mulai dari bawah */
+  opacity: 0;
+  transition: transform 1s ease, opacity 1s ease, filter 1s ease;
+}
+
+/* animate: slide up + fade in */
+.hero-img.animate {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.03); /* posisi final */
+  transition: transform 1s ease, opacity 1s ease;
+}
+
+
+/* Slide in + fade in untuk home title */
+.background-text.animate {
+  opacity:1;
+  transform:translate(-50%, -50%);
+  transition: all 1s ease;
+}
+
+/* Slide in + fade in untuk home desc */
+.home-text.animate {
+  opacity:1;
+  transform:translateY(0);
+  transition: all 1s ease;
+}
+
+/* Galeria & personagens sudah ada */
+#galeria h1.animate,
+#personagens-title.animate {
+  opacity:1;
+  transform:translateY(0) scale(1);
+  transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+  .home-text { position:absolute; bottom:40px; left:90px; width:360px; text-align:left; font-size:15px; line-height:1.6; color:#f1f1f1; z-index:3; background:rgba(0,0,0,0.55); padding:18px 22px; border-radius:12px; box-shadow:0 0 20px rgba(255,255,255,0.15); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.2); opacity:0; transform:translateY(30px); transition:1s ease;}
+  .home-text strong { color:#ffd700; }
+
+  /* ===== GALERIA ===== */
+  #galeria {
+    padding:80px 0 40px 0;
+    text-align:center;
+    background: linear-gradient(to bottom, #0d0d0d, #000);
+    position:relative;
+    overflow:hidden;
+  }
+  #galeria h1 { 
+    font-family:'Arial Black',sans-serif; 
+    font-size:60px; 
+    font-weight:900;
+    color:#fff; 
+    margin-bottom:50px; 
+    position:relative; 
+    display:inline-block; 
+    opacity:0; 
+    transform:translateY(50px) scale(0.8); 
+    transition:all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    letter-spacing:3px;
+    text-transform:uppercase;
+  }
+  #galeria h1::before {
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:linear-gradient(45deg, #0055ff, #ff00ff, #00ffff);
+    filter:blur(20px);
+    opacity:0;
+    z-index:-1;
+    transition:opacity 0.8s ease;
+  }
+  #galeria h1::after { 
+    content:""; 
+    position:absolute; 
+    width:0%; 
+    height:4px; 
+    background:linear-gradient(90deg, #0055ff, #ff00ff, #00ffff);
+    left:50%; 
+    bottom:-15px; 
+    transform:translateX(-50%);
+    border-radius:2px; 
+    transition:width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow:0 0 20px rgba(0,85,255,0.8);
+  }
+  #galeria h1.animate { 
+    opacity:1; 
+    transform:translateY(0) scale(1);
+  }
+  #galeria h1.animate::before {
+    opacity:0.3;
+  }
+  #galeria h1.animate::after { 
+    width:120%; 
+  }
+  @keyframes textShine {
+    0%, 100% { text-shadow:0 0 20px rgba(255,255,255,0.3), 0 0 40px rgba(0,85,255,0.5); }
+    50% { text-shadow:0 0 30px rgba(255,255,255,0.6), 0 0 60px rgba(0,85,255,0.8), 0 0 80px rgba(255,0,255,0.6); }
+  }
+  #galeria h1.animate {
+    animation:textShine 2s ease infinite;
+  }
+
+  .slider { display:flex; gap:25px; width:max-content; margin-top:40px; }
+  .slider img { width:280px; border-radius:15px; filter:brightness(0.9) drop-shadow(0 0 10px rgba(255,255,255,0.3)); opacity:0; transform:translateX(-50px) scale(0.8); transition:all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor:pointer; }
+  .slider img:hover { filter:brightness(1.1) drop-shadow(0 0 25px rgba(255,215,0,0.8)); transform:translateY(-10px) scale(1.05) rotate(2deg); }
+  .slider.show img { opacity:1; transform:translateX(0) scale(1); }
+  .slider-left.show img:nth-child(1){ transition-delay:0.05s; }
+  .slider-left.show img:nth-child(2){ transition-delay:0.1s; }
+  .slider-left.show img:nth-child(3){ transition-delay:0.15s; }
+  .slider-left.show img:nth-child(4){ transition-delay:0.2s; }
+  .slider-left.show img:nth-child(5){ transition-delay:0.25s; }
+  .slider-left.show img:nth-child(6){ transition-delay:0.3s; }
+  .slider-left.show img:nth-child(7){ transition-delay:0.35s; }
+  .slider-left.show img:nth-child(8){ transition-delay:0.4s; }
+  .slider-right.show img:nth-child(1){ transition-delay:0.05s; }
+  .slider-right.show img:nth-child(2){ transition-delay:0.1s; }
+  .slider-right.show img:nth-child(3){ transition-delay:0.15s; }
+  .slider-right.show img:nth-child(4){ transition-delay:0.2s; }
+  .slider-right.show img:nth-child(5){ transition-delay:0.25s; }
+  .slider-right.show img:nth-child(6){ transition-delay:0.3s; }
+  .slider-right.show img:nth-child(7){ transition-delay:0.35s; }
+  .slider-right.show img:nth-child(8){ transition-delay:0.4s; }
+  .slider-right.show img:nth-child(9){ transition-delay:0.45s; }
+  .slider-left { animation:slide-left 30s linear infinite; }
+  .slider-right { animation:slide-right 30s linear infinite; }
+  @keyframes slide-left{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+  @keyframes slide-right{0%{transform:translateX(-50%);}100%{transform:translateX(0);}}
+
+  /* ===== PERSONAGENS ===== */
+  #personagens {
+    padding:80px 20px 50px 20px;
+    background: linear-gradient(to bottom, #000000, #1a1a1a);
+    position:relative;
+  }
+  #personagens-title {
+    font-family:'Arial Black',sans-serif;
+    font-size:60px;
+    font-weight:900;
+    color:#fff;
+    margin-bottom:50px;
+    text-align:center;
+    position:relative;
+    display:inline-block;
+    width:100%;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    opacity:0;
+    transform:translateY(50px) scale(0.8);
+    transition:all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  #personagens-title::before {
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:linear-gradient(45deg, #ffd700, #ff6b00, #ff0055);
+    filter:blur(20px);
+    opacity:0;
+    z-index:-1;
+    transition:opacity 0.8s ease;
+  }
+  #personagens-title::after {
+    content:"";
+    position:absolute;
+    width:0%;
+    height:4px;
+    background:linear-gradient(90deg, #ffd700, #ff6b00, #ff0055);
+    left:50%;
+    transform:translateX(-50%);
+    bottom:-15px;
+    border-radius:2px;
+    transition:width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow:0 0 20px rgba(255,215,0,0.8);
+  }
+  #personagens-title.animate {
+    opacity:1;
+    transform:translateY(0) scale(1);
+    animation:textShineGold 2s ease infinite;
+  }
+  #personagens-title.animate::before {
+    opacity:0.3;
+  }
+  #personagens-title.animate::after {
+    width:120%;
+  }
+  @keyframes textShineGold {
+    0%, 100% { text-shadow:0 0 20px rgba(255,215,0,0.3), 0 0 40px rgba(255,107,0,0.5); }
+    50% { text-shadow:0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,107,0,0.8), 0 0 80px rgba(255,0,85,0.6); }
+  }
+
+  .personagens-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:30px;
+    margin-top:20px;
+  }
+  .personagem { background:#0d0d0d; border-radius:15px; padding:20px; text-align:center; backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.2); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  .personagem:hover { transform:scale(1.05); box-shadow:0 0 20px #ffd700; }
+  .personagem img { width:100%; border-radius:12px; margin-bottom:15px; }
+  .personagem h3 { color:#ffd700; margin-bottom:10px; }
+  .personagem p { font-size:14px; color:#f1f1f1; line-height:1.5; }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<section id="home">
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#galeria">Galeria</a>
+    <a href="#personagens">Personagens</a>
+  </nav>
+  <div class="background-text" id="title">FRIEREN</div>
+  <img id="frieren-img" class="hero-img" src="frieren.png" alt="Frieren" />
+  <div class="home-text" id="desc">
+    <strong>Frieren</strong> adalah penyihir elf yang hidup jauh lebih lama dari manusia.  
+    Setelah petualangan panjang bersama pahlawan, ia memulai perjalanan baru  
+    untuk memahami waktu, perasaan, dan kenangan yang dulu ia abaikan.
+  </div>
+</section>
+
+<!-- GALERIA -->
+<section id="galeria">
+  <h1 id="galeria-title">Galeria</h1>
+  <div class="slider slider-left" id="slider-left">
+    <img src="frieren1.jpg" alt="Frieren 1">
+    <img src="frieren2.jpg" alt="Frieren 2">
+    <img src="frieren3.jpeg" alt="Frieren 3">
+    <img src="frieren4.jpeg" alt="Frieren 4">
+    <img src="frieren5.jpeg" alt="Frieren 5">
+    <img src="frieren9.png" alt="Frieren 6">
+    <img src="frieren7.png" alt="Frieren 7">
+    <img src="frieren8.png" alt="Frieren 8">
+  </div>
+  <div class="slider slider-right" id="slider-right">
+    <img src="frieren7.png" alt="Frieren 7">
+    <img src="frieren1.jpg" alt="Frieren 8">
+    <img src="frieren2.jpg" alt="Frieren 9">
+    <img src="frieren3.jpeg" alt="Frieren 10">
+    <img src="frieren9.png" alt="Frieren 11">
+    <img src="frieren10.png" alt="Frieren 12">
+    <img src="frieren9.png" alt="Frieren 13">
+    <img src="frieren8.png" alt="Frieren 14">
+    <img src="frieren7.png" alt="Frieren 15">
+  </div>
+</section>
+
+<!-- PERSONAGENS -->
+<section id="personagens">
+  <h1 id="personagens-title">Personagens</h1>
+  <div class="personagens-grid">
+    <div class="personagem">
+      <img src="frieren1.jpg" alt="Frieren">
+      <h3>Frieren</h3>
+      <p>Penyihir elf yang hidup jauh lebih lama dari manusia. Memulai perjalanan memahami waktu dan kenangan.</p>
+    </div>
+    <div class="personagem">
+      <img src="15d47c5a8477d8c859151a5a0a77f02f.jpg" alt="Hero 2">
+      <h3>Himme</h3>
+      <p>Mantan pahlawan manusia yang memimpin kelompok sebelumnya.<br>
+Karakter penuh semangat, teman dekat Frieren di awal cerita.</p>
+    </div>
+    <div class="personagem">
+      <img src="35ed645a0639150df9cfe1d2f606a9ca.jpg" alt="Healer">
+      <h3>Fern</h3>
+      <p>Anak murid Frieren yang menjadi fokus pada perjalanan baru.<br>
+
+Membantu Frieren belajar tentang manusia dan dunia modern.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // HOME animations
+  window.addEventListener("load", () => {
+    const nav = document.querySelector("nav");
+    nav.classList.add("show");
+
+    const img = document.getElementById("frieren-img");
+    const title = document.getElementById("title");
+    const desc = document.getElementById("desc");
+
+    setTimeout(() => {
+      img.style.opacity = "1";
+      img.style.transform = "translate(-50%, -50%) scale(1.03)";
+      img.style.filter = "brightness(1) drop-shadow(0 0 40px rgba(255,255,255,0.5))";
+    }, 500);
+
+    setTimeout(() => {
+      title.style.opacity = "1";
+      title.style.transform = "translate(-50%, -50%)";
+    }, 800);
+
+    setTimeout(() => {
+      desc.style.opacity = "1";
+      desc.style.transform = "translateY(0)";
+    }, 1200);
+
+    // Floating animation - FIXED: tetap di posisi center
+    setTimeout(() => {
+      const baseY = -50; // posisi Y awal (dalam %)
+      const baseX = -50; // posisi X awal (dalam %)
+      
+      function floatHero() {
+        const time = Date.now() / 1000;
+        const yOffset = 1 * Math.sin(time); // naik-turun 1% saja
+        const xOffset = 0.5 * Math.sin(time * 1.5); // kiri-kanan 0.5%
+        
+        img.style.transform = `translate(calc(${baseX}% + ${xOffset}%), calc(${baseY}% + ${yOffset}%)) scale(1.03)`;
+        requestAnimationFrame(floatHero);
+      }
+      floatHero();
+    }, 2000);
+  });
+
+  // Galeria animations
+  const galeriaTitle = document.getElementById("galeria-title");
+  const personagensTitle = document.getElementById("personagens-title");
+  const sliders = document.querySelectorAll(".slider");
+  
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        if(entry.target.id === "galeria-title") {
+          galeriaTitle.classList.add("animate");
+        }
+        if(entry.target.id === "personagens-title") {
+          personagensTitle.classList.add("animate");
+        }
+        if(entry.target.classList.contains("slider")) {
+          entry.target.classList.add("show");
+        }
+      }
+    });
+  }, {threshold:0.3});
+  
+  observer.observe(galeriaTitle);
+  observer.observe(personagensTitle);
+  sliders.forEach(slider => observer.observe(slider));
+</script>
+
+</body>
+</html>
